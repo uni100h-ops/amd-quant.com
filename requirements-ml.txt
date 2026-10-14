@@ -1,3 +1,0 @@
-# The AMD image supplies ROCm PyTorch; do not replace it.
--r requirements.txt
-numpy==2.2.5
