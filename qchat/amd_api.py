@@ -12,8 +12,9 @@ import httpx
 
 
 class AMDError(RuntimeError):
-    def __init__(self, code):
+    def __init__(self, code, diagnostic=None):
         self.code = code
+        self.diagnostic = diagnostic or {}
         super().__init__(code)
 
 
@@ -87,12 +88,20 @@ class AMDNormalizer:
             raise AMDError('amd_config')  # Portal URL is not an inference endpoint.
 
     def info(self):
+        path = urlsplit(self.url).path
+        # Only known non-secret routes are exposed, never arbitrary URL paths.
+        known_paths = {'/', '/radeon/api/v1', '/radeon/api/v1/',
+                       '/radeon/api/v1/chat/completions', '/v1', '/v1/',
+                       '/v1/chat/completions', '/api/v1/chat/completions'}
         return {'provider': 'AMD Token Factory (event endpoint configured by owner)',
                 'configured': True, 'model': self.model, 'endpoint_host': self.host,
+                'endpoint_path': path if path in known_paths else 'unrecognized_path',
+                'endpoint_matches_documentation': self.url == 'https://developer.amd.com.cn/radeon/api/v1/chat/completions',
                 'role': 'shared_question_normalization', 'gpu_independently_verified': False}
 
     def normalize(self, prompt):
         start = time.monotonic()
+        response = None
         payload = {'model': self.model, 'messages': [
             {'role': 'system', 'content': SYSTEM}, {'role': 'user', 'content': prompt}],
             'temperature': 0, 'max_tokens': 128, 'stream': False}
@@ -114,12 +123,15 @@ class AMDNormalizer:
             if text.startswith('```') and text.endswith('```'):
                 text = text.split('\n', 1)[1].rsplit('```', 1)[0].strip()
             normalized = canonicalize(json.loads(text))
-        except AMDError:
+        except AMDError as exc:
+            exc.diagnostic = self._diagnostic(start, response, 'http_rejected' if response is not None and response.status_code != 200 else 'invalid_response')
             raise
         except (KeyError, IndexError, TypeError, ValueError):
-            raise AMDError('amd_format') from None
+            raise AMDError('amd_format', self._diagnostic(start, response, 'invalid_response')) from None
+        except httpx.TimeoutException:
+            raise AMDError('amd_failed', self._diagnostic(start, None, 'timeout')) from None
         except httpx.HTTPError:
-            raise AMDError('amd_failed') from None
+            raise AMDError('amd_failed', self._diagnostic(start, None, 'connection_error')) from None
         evidence = {**self.info(), 'api_call_succeeded': True,
                     'elapsed_ms': (time.monotonic() - start) * 1000,
                     'normalization': json.loads(text),
@@ -128,3 +140,26 @@ class AMDNormalizer:
                     'returned_model': str(body.get('model', self.model))[:200],
                     'response_sha256': hashlib.sha256(content.encode()).hexdigest()}
         return normalized, evidence
+
+    def _diagnostic(self, start, response, reason):
+        info = self.info()
+        diagnostic = {k: info[k] for k in ('endpoint_host', 'endpoint_path', 'endpoint_matches_documentation')}
+        diagnostic.update(reason=reason, http_status=response.status_code if response is not None else None,
+                          elapsed_ms=(time.monotonic() - start) * 1000)
+        # Classify a provider error without publishing its raw body, headers,
+        # redirects, prompt, credentials or arbitrary exception strings.
+        if response is not None and response.status_code != 200:
+            try:
+                body = response.json()
+                error = body.get('error', {}) if isinstance(body, dict) else {}
+                message = error.get('message', '') if isinstance(error, dict) else ''
+                message = message.lower() if isinstance(message, str) else ''
+                if any(s in message for s in ('insufficient credit', 'insufficient balance', 'not enough credit', 'credit balance')):
+                    diagnostic['provider_error_category'] = 'insufficient_credits'
+                elif 'model' in message and any(s in message for s in ('not found', 'does not exist', 'unknown', 'invalid', 'not available', 'not supported')):
+                    diagnostic['provider_error_category'] = 'model_unavailable'
+                elif any(s in message for s in ('max_tokens', 'max_completion_tokens')):
+                    diagnostic['provider_error_category'] = 'output_limit_parameter'
+            except (TypeError, ValueError):
+                pass
+        return diagnostic
