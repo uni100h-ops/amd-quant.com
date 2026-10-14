@@ -79,6 +79,12 @@ class AMDNormalizer:
         self.model = os.getenv('AMD_MODEL', '').strip()
         self.transport = transport
         self.host = urlsplit(self.url).hostname
+        try:
+            self.read_timeout = int(os.getenv('AMD_READ_TIMEOUT_SECONDS', '120'))
+        except ValueError:
+            raise AMDError('amd_config') from None
+        if not 30 <= self.read_timeout <= 300:
+            raise AMDError('amd_config')
         if not self.url or not self.key or not self.model:
             raise AMDError('amd_config')
         url = urlsplit(self.url)
@@ -97,6 +103,7 @@ class AMDNormalizer:
                 'configured': True, 'model': self.model, 'endpoint_host': self.host,
                 'endpoint_path': path if path in known_paths else 'unrecognized_path',
                 'endpoint_matches_documentation': self.url == 'https://developer.amd.com.cn/radeon/api/v1/chat/completions',
+                'read_timeout_seconds': self.read_timeout,
                 'role': 'shared_question_normalization', 'gpu_independently_verified': False}
 
     def normalize(self, prompt):
@@ -107,7 +114,8 @@ class AMDNormalizer:
             'temperature': 0, 'max_tokens': 128, 'stream': False}
         try:
             # One call only: do not multiply event quota through automatic retries.
-            with httpx.Client(timeout=60, follow_redirects=False, transport=self.transport) as client:
+            timeout = httpx.Timeout(connect=10, read=self.read_timeout, write=10, pool=10)
+            with httpx.Client(timeout=timeout, follow_redirects=False, transport=self.transport) as client:
                 response = client.post(self.url, headers={'Authorization': 'Bearer ' + self.key}, json=payload)
             if response.status_code in (401, 403):
                 raise AMDError('amd_auth')
@@ -128,8 +136,13 @@ class AMDNormalizer:
             raise
         except (KeyError, IndexError, TypeError, ValueError):
             raise AMDError('amd_format', self._diagnostic(start, response, 'invalid_response')) from None
-        except httpx.TimeoutException:
-            raise AMDError('amd_failed', self._diagnostic(start, None, 'timeout')) from None
+        except httpx.TimeoutException as exc:
+            diagnostic = self._diagnostic(start, None, 'timeout')
+            diagnostic['timeout_phase'] = next((name for cls, name in (
+                (httpx.ConnectTimeout, 'connect'), (httpx.ReadTimeout, 'read'),
+                (httpx.WriteTimeout, 'write'), (httpx.PoolTimeout, 'pool'))
+                if isinstance(exc, cls)), 'unknown')
+            raise AMDError('amd_failed', diagnostic) from None
         except httpx.HTTPError:
             raise AMDError('amd_failed', self._diagnostic(start, None, 'connection_error')) from None
         evidence = {**self.info(), 'api_call_succeeded': True,
@@ -143,7 +156,7 @@ class AMDNormalizer:
 
     def _diagnostic(self, start, response, reason):
         info = self.info()
-        diagnostic = {k: info[k] for k in ('endpoint_host', 'endpoint_path', 'endpoint_matches_documentation')}
+        diagnostic = {k: info[k] for k in ('endpoint_host', 'endpoint_path', 'endpoint_matches_documentation', 'read_timeout_seconds')}
         diagnostic.update(reason=reason, http_status=response.status_code if response is not None else None,
                           elapsed_ms=(time.monotonic() - start) * 1000)
         # Classify a provider error without publishing its raw body, headers,
