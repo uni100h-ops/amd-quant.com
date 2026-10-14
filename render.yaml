@@ -1,0 +1,50 @@
+# AMD uses the event's free API. No rented AMD GPU, no Docker, no gateway.
+# Free Render storage is temporary. Read README.md before deploying.
+services:
+  - type: web
+    name: amdquant
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.12
+      - key: APP_TOKEN
+        generateValue: true
+      - key: PUBLIC_DEMO
+        value: "1"
+      - key: PUBLIC_RATE_LIMIT
+        value: "6"
+      - key: AMD_COMPLETIONS_URL
+        sync: false
+      - key: AMD_API_KEY
+        sync: false
+      - key: AMD_MODEL
+        sync: false
+      - key: IBM_QUANTUM_API_KEY
+        sync: false
+      - key: IBM_QUANTUM_INSTANCE
+        sync: false
+      - key: IBM_QUANTUM_BACKEND
+        sync: false
+      - key: IBM_SHOTS
+        value: "1024"
+      - key: IBM_MAX_JOBS_PER_DAY
+        value: "32"
+      - key: MAX_OUTPUT_STEPS
+        value: "16"
+      - key: STATE_DIR
+        value: /tmp/amdquant-state
+      - key: STATE_STORAGE
+        value: ephemeral
+      - key: OPENBLAS_NUM_THREADS
+        value: "1"
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: QISKIT_PARALLEL
+        value: "FALSE"
+      - key: RAYON_NUM_THREADS
+        value: "1"
