@@ -2,14 +2,16 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff"><meta name="description" content="AmdQuant compares classical and hybrid AI micro-models using AMD and physical IBM quantum hardware with the same question."><title>AmdQuant — AI micro-model comparator</title><link rel="canonical" href="https://amd-quant.com/"><link rel="icon" href="./mark.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css"></head>
 <body>
 <header class="site-header"><a class="brand" href="#compare" aria-label="AmdQuant"><img src="./mark.svg" alt="" width="43" height="51"><span>Amd<span class="brand-quant">Quant</span></span></a><div class="header-actions"><button type="button" id="technicalButton" class="nav-button" data-i18n="technicalData" aria-pressed="false">Technical data</button><div class="languages" role="group" aria-label="Language">
-<button class="language active" data-lang="en" lang="en" aria-label="English" aria-pressed="true" title="English"><img src="./flags/gb.svg" alt="" width="23" height="16"><span>EN</span></button>
-<button class="language" data-lang="es" lang="es" aria-label="Español" aria-pressed="false" title="Español"><img src="./flags/es.svg" alt="" width="23" height="16"><span>ES</span></button>
-<button class="language" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false" title="Français"><img src="./flags/fr.svg" alt="" width="23" height="16"><span>FR</span></button>
-<button class="language" data-lang="de" lang="de" aria-label="Deutsch" aria-pressed="false" title="Deutsch"><img src="./flags/de.svg" alt="" width="23" height="16"><span>DE</span></button>
+<button class="language active" data-lang="en" lang="en" aria-label="English" aria-pressed="true" title="English"><img src="./flags/gb.svg" alt="" width="23" height="16"></button>
+<button class="language" data-lang="es" lang="es" aria-label="Español" aria-pressed="false" title="Español"><img src="./flags/es.svg" alt="" width="23" height="16"></button>
+<button class="language" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="false" title="Français"><img src="./flags/fr.svg" alt="" width="23" height="16"></button>
+<button class="language" data-lang="de" lang="de" aria-label="Deutsch" aria-pressed="false" title="Deutsch"><img src="./flags/de.svg" alt="" width="23" height="16"></button>
 </div></div></header>
 <main>
 <section id="compareView" class="compare-view" aria-labelledby="pageTitle">
-<div class="composer-intro"><h1 id="pageTitle"><span data-i18n="titleLead">Traditional AI vs IBM quantum</span><span class="title-detail" data-i18n="titleDetail">Micro-model comparator</span></h1></div>
+<div class="composer-intro"><h1 id="pageTitle"><span class="title-lead" data-i18n="titleLead">Traditional AI micro
+vs
+ADM IBM Quantum micro</span><span class="title-detail" data-i18n="titleDetail">Experimental Micro-model comparator</span></h1></div>
 <div class="question-area"><div class="samples"><span class="samples-label" data-i18n="try">TRY</span><div id="sampleButtons" class="sample-buttons"></div></div>
 <form id="questionForm" class="composer"><label class="visually-hidden" for="question" data-i18n="yourQuestion">Your question</label><textarea id="question" rows="3" maxlength="2000" data-i18n-placeholder="placeholder" placeholder="Ask a question…" required></textarea><div class="composer-bottom"><span data-i18n="inputHint">One question for both models.</span><button id="executeButton" class="primary-button" type="submit"><span id="executeLabel" data-i18n="execute">Run</span><svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18"><path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></form>
 <p class="technical-copy scope-note" data-i18n="normalizationScope"></p><div class="composer-caption"><span id="runStatus" role="status" aria-live="polite">Checking availability…</span><button id="cancelButton" class="text-button" type="button" data-i18n="cancel" hidden>Cancel</button><button id="retryButton" class="text-button" type="button" data-i18n="retry" hidden>Resume status</button></div></div>

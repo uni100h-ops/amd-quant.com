@@ -12,6 +12,7 @@ async function call(action,data){
  if(!response.ok){const error=new Error('api');error.status=response.status;throw error;}return response.json();
 }
 function errorText(e){if(e.status===429)return t('busyError');if(e.status===422)return t('promptTooLong');if(e.status===503||e.message==='unavailable')return t('unavailable');return t('networkError');}
+function amdFailureText(job){const code=job?.amd_diagnostic?.http_status;if(Number.isInteger(code)&&code>=300&&code<=599)return t('amdHttpError',{status:code});return t(job?.error_code==='amd_quota'?'amd_quota':'amdError');}
 function saveActive(){try{if(active)localStorage.setItem('amdquant.active.v3',JSON.stringify(active));else localStorage.removeItem('amdquant.active.v3');}catch{}}
 function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,6500);}
 function setBusy(value){busy=value;document.querySelectorAll('#question,#newQuestion,#sampleButtons button').forEach(el=>el.disabled=value);$('executeButton').disabled=value||!ready;$('executeLabel').textContent=t(value?'running':'execute');$('cancelButton').hidden=!value||!active?.job_id;}
@@ -19,7 +20,7 @@ function renderStatus(){
  let text=t(status);
  if(status==='running'){const stage=lastJob?.stage||'';text=t(stage==='amd_normalizing'?'amdNormalizing':stage==='ibm_running'?'ibmRunning':stage.startsWith('ibm_')?'ibmWaiting':'measuring');}
  if(status==='failed'&&lastJob?.error_code==='daily_limit')text=t('dailyLimit');
- if(status==='failed'&&lastJob?.error_code?.startsWith('amd_'))text=t(lastJob.error_code==='amd_quota'?'amd_quota':'amdError');
+ if(status==='failed'&&lastJob?.error_code?.startsWith('amd_'))text=amdFailureText(lastJob);
  if(status==='failed'&&lastJob?.error_code==='interrupted')text=t('interrupted');
  $('runStatus').textContent=text;
 }
@@ -66,7 +67,7 @@ function applyJob(job){
   if(job.status==='unsupported')for(const v of variants){$('answer-'+v).classList.remove('pending');$('answer-'+v).textContent=t('unsupported');}
   else if(job.status!=='completed'){
    $('answer-hybrid').classList.remove('pending');$('answer-hybrid').textContent=(job.hybrid_partial?.text?job.hybrid_partial.text+'\n\n':'')+t('noFallback');
-   if(!job.classical){$('answer-classical').classList.remove('pending');$('answer-classical').textContent=t(job.error_code?.startsWith('amd_')?'amdError':'failed');}
+   if(!job.classical){$('answer-classical').classList.remove('pending');$('answer-classical').textContent=job.error_code?.startsWith('amd_')?amdFailureText(job):t('failed');}
   }
  }else setBusy(true);
  renderNormalization();renderEvidence();renderStatus();
