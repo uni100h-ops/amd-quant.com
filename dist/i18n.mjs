@@ -1,5 +1,10 @@
 export const translations={
   "en": {
+    "amdWaitingElapsed": "Waiting for AMD to prepare the question… {seconds} s elapsed.",
+    "ibmWaitingElapsed": "Waiting for IBM Quantum… {seconds} s since the comparison started.",
+    "amdTimeout": "The AMD request timed out after {seconds} s. No IBM job was submitted. Download the measurement for details.",
+    "amdConnectTimeout": "The connection to AMD timed out after {seconds} s. No IBM job was submitted. Download the measurement for details.",
+    "amdConnectionError": "Could not communicate with AMD. No IBM job was submitted. Download the measurement for details.",
     "technicalData": "Technical data",
     "title": "Traditional AI vs IBM quantum · AMD micro-model comparator",
     "titleLead": "Traditional AI micro\nvs\nADM IBM Quantum micro",
@@ -90,6 +95,11 @@ export const translations={
     "partial": "Partial answer; IBM is still generating…"
   },
   "es": {
+    "amdWaitingElapsed": "Esperando a que AMD prepare la pregunta… {seconds} s transcurridos.",
+    "ibmWaitingElapsed": "Esperando a IBM Quantum… {seconds} s desde el inicio de la comparación.",
+    "amdTimeout": "La petición a AMD agotó el tiempo de espera tras {seconds} s. No se envió ningún trabajo a IBM. Descarga la medición para ver los detalles.",
+    "amdConnectTimeout": "La conexión con AMD agotó el tiempo de espera tras {seconds} s. No se envió ningún trabajo a IBM. Descarga la medición para ver los detalles.",
+    "amdConnectionError": "No se pudo comunicar con AMD. No se envió ningún trabajo a IBM. Descarga la medición para ver los detalles.",
     "technicalData": "Datos técnicos",
     "title": "IA tradicional frente a cuántica IBM · Comparador de micro modelos AMD",
     "titleLead": "Micro de IA tradicional\nvs\nMicro cuántico ADM IBM",
@@ -180,6 +190,11 @@ export const translations={
     "partial": "Respuesta parcial; IBM sigue generando…"
   },
   "fr": {
+    "amdWaitingElapsed": "En attente de la préparation de la question par AMD… {seconds} s écoulées.",
+    "ibmWaitingElapsed": "En attente d’IBM Quantum… {seconds} s depuis le début de la comparaison.",
+    "amdTimeout": "La requête AMD a dépassé le délai après {seconds} s. Aucun travail IBM n’a été envoyé. Téléchargez la mesure pour consulter les détails.",
+    "amdConnectTimeout": "La connexion à AMD a dépassé le délai après {seconds} s. Aucun travail IBM n’a été envoyé. Téléchargez la mesure pour consulter les détails.",
+    "amdConnectionError": "Impossible de communiquer avec AMD. Aucun travail IBM n’a été envoyé. Téléchargez la mesure pour consulter les détails.",
     "technicalData": "Données techniques",
     "title": "IA classique face au quantique IBM · Comparateur AMD",
     "titleLead": "Micro IA traditionnelle\nvs\nMicro quantique ADM IBM",
@@ -270,6 +285,11 @@ export const translations={
     "partial": "Réponse partielle; IBM poursuit la génération…"
   },
   "de": {
+    "amdWaitingElapsed": "Warten auf die Vorbereitung der Frage durch AMD… {seconds} s vergangen.",
+    "ibmWaitingElapsed": "Warten auf IBM Quantum… {seconds} s seit Beginn des Vergleichs.",
+    "amdTimeout": "Zeitüberschreitung der AMD-Anfrage nach {seconds} s. Kein IBM-Auftrag wurde gesendet. Laden Sie die Messung für Details herunter.",
+    "amdConnectTimeout": "Zeitüberschreitung beim Verbindungsaufbau zu AMD nach {seconds} s. Kein IBM-Auftrag wurde gesendet. Laden Sie die Messung für Details herunter.",
+    "amdConnectionError": "Kommunikation mit AMD fehlgeschlagen. Kein IBM-Auftrag wurde gesendet. Laden Sie die Messung für Details herunter.",
     "technicalData": "Technische Daten",
     "title": "Klassische KI gegen IBM-Quantenmodell · AMD-Vergleich",
     "titleLead": "Traditionelles KI-Mikromodell\nvs\nADM IBM Quanten-Mikromodell",

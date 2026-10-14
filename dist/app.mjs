@@ -12,7 +12,13 @@ async function call(action,data){
  if(!response.ok){const error=new Error('api');error.status=response.status;throw error;}return response.json();
 }
 function errorText(e){if(e.status===429)return t('busyError');if(e.status===422)return t('promptTooLong');if(e.status===503||e.message==='unavailable')return t('unavailable');return t('networkError');}
-function amdFailureText(job){const code=job?.amd_diagnostic?.http_status;if(Number.isInteger(code)&&code>=300&&code<=599)return t('amdHttpError',{status:code});return t(job?.error_code==='amd_quota'?'amd_quota':'amdError');}
+function amdFailureText(job){
+ const d=job?.amd_diagnostic||{},code=d.http_status;
+ if(d.reason==='timeout'){const seconds=Number.isFinite(d.elapsed_ms)?number(d.elapsed_ms/1000,1):'?';return t(d.timeout_phase==='connect'?'amdConnectTimeout':'amdTimeout',{seconds});}
+ if(d.reason==='connection_error')return t('amdConnectionError');
+ if(Number.isInteger(code)&&code>=300&&code<=599)return t('amdHttpError',{status:code});
+ return t(job?.error_code==='amd_quota'?'amd_quota':'amdError');
+}
 function saveActive(){try{if(active)localStorage.setItem('amdquant.active.v3',JSON.stringify(active));else localStorage.removeItem('amdquant.active.v3');}catch{}}
 function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,6500);}
 function setBusy(value){busy=value;document.querySelectorAll('#question,#newQuestion,#sampleButtons button').forEach(el=>el.disabled=value);$('executeButton').disabled=value||!ready;$('executeLabel').textContent=t(value?'running':'execute');$('cancelButton').hidden=!value||!active?.job_id;}
@@ -23,6 +29,14 @@ function renderStatus(){
  if(status==='failed'&&lastJob?.error_code?.startsWith('amd_'))text=amdFailureText(lastJob);
  if(status==='failed'&&lastJob?.error_code==='interrupted')text=t('interrupted');
  $('runStatus').textContent=text;
+}
+function renderWaiting(){
+ if(!active||status!=='running')return;
+ const stage=lastJob?.stage||'queued';
+ const started=Number.isFinite(lastJob?.created_at)?lastJob.created_at*1000:active.started_at||Date.now();
+ const seconds=number(Math.max(0,Math.floor((Date.now()-started)/1000)),0);
+ const message=stage==='amd_normalizing'?t('amdWaitingElapsed',{seconds}):stage.startsWith('ibm_')?t('ibmWaitingElapsed',{seconds}):t('measuring');
+ for(const v of variants){if(lastJob?.[v]||(v==='hybrid'&&lastJob?.hybrid_partial))continue;$('answer-'+v).textContent=message;}
 }
 function renderSamples(){const box=$('sampleButtons');box.replaceChildren();for(const [label,prompt]of samples[language]||samples.en){const button=document.createElement('button');button.type='button';button.textContent=label;button.disabled=busy;button.onclick=()=>{$('question').value=prompt;invalidate();$('question').focus();};box.append(button);}}
 function renderMetrics(variant,r){
@@ -46,13 +60,13 @@ function setLanguage(next){
  if(!Object.hasOwn(translations,next))return;language=next;document.documentElement.lang=language;
  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.getAttribute('data-i18n')));document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>el.placeholder=t(el.getAttribute('data-i18n-placeholder')));
  document.querySelectorAll('[data-lang]').forEach(el=>{const chosen=el.getAttribute('data-lang')===language;el.classList.toggle('active',chosen);el.setAttribute('aria-pressed',String(chosen));});
- renderSamples();renderStatus();renderNormalization();renderComparison();renderEvidence();renderBenchmark();setBusy(busy);
+ renderSamples();renderStatus();renderNormalization();renderComparison();renderEvidence();renderBenchmark();setBusy(busy);renderWaiting();
  try{localStorage.setItem('amdquant.language',language);}catch{}
 }
 function showView(){const technical=location.hash==='#technical';$('technicalView').hidden=!technical;$('compareView').hidden=technical;$('technicalButton').setAttribute('aria-pressed',String(technical));document.title='AmdQuant — '+t(technical?'technicalData':'title');}
 function navigate(technical){location.hash=technical?'technical':'compare';window.scrollTo({top:0,behavior:'auto'});}
 function invalidate(){lastComparison=null;lastJob=null;$('results').hidden=true;$('normalization').hidden=true;$('exportButton').disabled=true;$('comparisonSummary').replaceChildren();renderEvidence();if(!busy){status=ready?'ready':'unavailable';renderStatus();}}
-function pendingView(prompt){$('results').hidden=false;$('resultTitle').textContent=prompt;for(const v of variants){$('answer-'+v).textContent=t('computing');$('answer-'+v).classList.add('pending');$('metrics-'+v).replaceChildren();}}
+function pendingView(prompt){$('results').hidden=false;$('resultTitle').textContent=prompt;for(const v of variants){$('answer-'+v).textContent=t('measuring');$('answer-'+v).classList.add('pending');$('metrics-'+v).replaceChildren();}}
 function applyJob(job){
  lastJob=job;$('results').hidden=false;$('resultTitle').textContent=job.prompt||active?.prompt||'';
  if(job.classical)renderAnswer('classical',job.classical);
@@ -70,7 +84,7 @@ function applyJob(job){
    if(!job.classical){$('answer-classical').classList.remove('pending');$('answer-classical').textContent=job.error_code?.startsWith('amd_')?amdFailureText(job):t('failed');}
   }
  }else setBusy(true);
- renderNormalization();renderEvidence();renderStatus();
+ renderNormalization();renderEvidence();renderStatus();renderWaiting();
 }
 async function poll(){
  if(!active?.job_id)return;
@@ -105,7 +119,7 @@ $('technicalButton').onclick=()=>navigate(location.hash!=='#technical');$('backB
 document.querySelectorAll('[data-lang]').forEach(el=>el.onclick=()=>{setLanguage(el.getAttribute('data-lang'));showView();});
 $('question').addEventListener('input',invalidate);$('question').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();if(!busy&&ready)$('questionForm').requestSubmit();}});
 $('newQuestion').onclick=()=>{$('question').value='';invalidate();$('question').focus();window.scrollTo({top:0,behavior:'smooth'});};
-$('questionForm').onsubmit=async e=>{e.preventDefault();if(busy||!ready)return;const prompt=$('question').value.trim();if(!prompt)return toast(t('enterQuestion'));invalidate();const request_id=crypto.randomUUID();active={prompt,request_id,job_id:request_id.replaceAll('-','')};saveActive();pendingView(prompt);await submitActive();};
+$('questionForm').onsubmit=async e=>{e.preventDefault();if(busy||!ready)return;const prompt=$('question').value.trim();if(!prompt)return toast(t('enterQuestion'));invalidate();const request_id=crypto.randomUUID();active={prompt,request_id,job_id:request_id.replaceAll('-',''),started_at:Date.now()};saveActive();pendingView(prompt);await submitActive();};
 $('retryButton').onclick=()=>{clearTimeout(pollTimer);$('retryButton').hidden=true;return poll();};
 $('cancelButton').onclick=async()=>{if(!active?.job_id)return;try{await call('jobs/'+active.job_id+'/cancel',{});status='cancelling';renderStatus();}catch(e){toast(errorText(e));}};
 $('exportButton').onclick=()=>{if(!lastJob)return;const url=URL.createObjectURL(new Blob([JSON.stringify({...lastJob,interface_language:language},null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='amdquant-amd-ibm-'+Date.now()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
