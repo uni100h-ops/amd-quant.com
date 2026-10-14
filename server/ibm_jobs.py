@@ -119,6 +119,7 @@ class JobManager:
         except BudgetError:
             self.store.update(id, status='failed', stage='failed', error_code='daily_limit')
         except AMDError as exc:
-            self.store.update(id, status='failed', stage='failed', error_code=exc.code)
+            self.store.update(id, status='failed', stage='failed', error_code=exc.code,
+                              amd_diagnostic=exc.diagnostic)
         except Exception:
             self.store.update(id, status='failed', stage='failed', error_code='ibm_failed')
