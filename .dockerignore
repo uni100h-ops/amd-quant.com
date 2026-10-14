@@ -1,0 +1,16 @@
+.git
+.openai
+.env
+.env.*
+**/__pycache__
+**/.pytest_cache
+.venv
+hf-cache
+amd/caddy-data
+amd/caddy-config
+owner
+
+.secrets/
+state/
+*.sqlite3
+*.sqlite3-*

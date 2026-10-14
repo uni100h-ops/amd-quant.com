@@ -1,0 +1,3 @@
+# Pin the server-side Runtime V2 API used by this release.
+qiskit==2.5.2
+qiskit-ibm-runtime==0.47.0
