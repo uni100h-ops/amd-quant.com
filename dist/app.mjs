@@ -45,7 +45,13 @@ function renderMetrics(variant,r){
  const detail=document.createElement('span');detail.className='model-only';detail.textContent=t('modelTime',{time:ms(r.elapsed_ms)});box.append(detail);
  if(r.stop_reason==='max_tokens'){const note=document.createElement('p');note.className='output-note';note.textContent=t('outputCap');box.append(note);}
 }
-function renderAnswer(variant,r){$('answer-'+variant).classList.remove('pending');$('answer-'+variant).textContent=r.text||t('emptyAnswer');renderMetrics(variant,r);}
+function renderAnswer(variant,r){
+ const answer=$('answer-'+variant);answer.classList.remove('pending');answer.textContent=r.text||t('emptyAnswer');renderMetrics(variant,r);
+ const check=r.quality_check;if(check?.type==='exact_addition'){
+  const note=document.createElement('p');note.className='quality-feedback'+(check.passed?'':' incorrect');
+  note.textContent=t(check.passed?'arithmeticCorrect':'arithmeticIncorrect',{expected:check.expected_answer});answer.append(note);
+ }
+}
 function renderNormalization(){const amd=lastJob?.amd||lastComparison?.amd;$('normalization').hidden=!amd?.normalized_prompt;if(!amd)return;$('normalizedPrompt').textContent=amd.normalized_prompt||'';$('amdTiming').textContent=t('amdTime',{time:ms(amd.elapsed_ms)});}
 function renderComparison(){
  if(!lastComparison)return;const r=lastComparison,c=r.classical,h=r.hybrid;$('resultTitle').textContent=r.prompt;variants.forEach(v=>renderAnswer(v,r[v]));
