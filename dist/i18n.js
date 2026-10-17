@@ -186,12 +186,12 @@ window.AMDQUANT_I18N = {
     "validation_invalid_variant": "This variant is not supported in this category.",
     "validation_generated_fields": "Generated variants accept kind, variant, size and seed only. Use the standard template for your own data.",
     "validation_channel_limit": "Generated radio networks support at most 2048 transmitters.",
-    "alertChecking": "Waiting for GPU reconnection. The recovery agent attempts to start AMD when needed. Startup can take longer than 40 seconds. Run becomes available when the engine connects.",
-    "alertAccepted": "Waiting for GPU reconnection. The recovery agent attempts to start AMD when needed. Startup can take longer than 40 seconds. Run becomes available when the engine connects.",
-    "alertFailed": "Waiting for GPU reconnection. The recovery agent attempts to start AMD when needed. Startup can take longer than 40 seconds. Run becomes available when the engine connects.",
-    "alertOffline": "Waiting for GPU reconnection. The recovery agent attempts to start AMD when needed. Startup can take longer than 40 seconds. Run becomes available when the engine connects.",
+    "alertChecking": "Waiting for GPU reconnection. The recovery agent attempts to start AMD when needed. Startup can take longer than 90 seconds. Run becomes available when the engine connects.",
+    "alertAccepted": "Waiting for GPU reconnection. The recovery agent attempts to start AMD when needed. Startup can take longer than 90 seconds. Run becomes available when the engine connects.",
+    "alertFailed": "Waiting for GPU reconnection. The recovery agent attempts to start AMD when needed. Startup can take longer than 90 seconds. Run becomes available when the engine connects.",
+    "alertOffline": "Waiting for GPU reconnection. The recovery agent attempts to start AMD when needed. Startup can take longer than 90 seconds. Run becomes available when the engine connects.",
     "stillConnecting": "Still connecting…",
-    "connectionCountdown": "40-second countdown. GPU startup may take longer."
+    "connectionCountdown": "90-second countdown. GPU startup may take longer."
   },
   "es": {
     "technicalData": "Datos técnicos",
@@ -380,12 +380,12 @@ window.AMDQUANT_I18N = {
     "validation_invalid_variant": "Esta variante no corresponde a esta pestaña.",
     "validation_generated_fields": "Las variantes generadas solo admiten kind, variant, size y seed. Para datos propios, utiliza la plantilla normal.",
     "validation_channel_limit": "Las redes de radio generadas admiten hasta 2048 transmisores.",
-    "alertChecking": "Esperando la reconexión GPU. El agente intenta iniciar AMD cuando hace falta. El arranque puede tardar más de 40 segundos. Run se habilita cuando el motor conecta.",
-    "alertAccepted": "Esperando la reconexión GPU. El agente intenta iniciar AMD cuando hace falta. El arranque puede tardar más de 40 segundos. Run se habilita cuando el motor conecta.",
-    "alertFailed": "Esperando la reconexión GPU. El agente intenta iniciar AMD cuando hace falta. El arranque puede tardar más de 40 segundos. Run se habilita cuando el motor conecta.",
-    "alertOffline": "Esperando la reconexión GPU. El agente intenta iniciar AMD cuando hace falta. El arranque puede tardar más de 40 segundos. Run se habilita cuando el motor conecta.",
+    "alertChecking": "Esperando la reconexión GPU. El agente intenta iniciar AMD cuando hace falta. El arranque puede tardar más de 90 segundos. Run se habilita cuando el motor conecta.",
+    "alertAccepted": "Esperando la reconexión GPU. El agente intenta iniciar AMD cuando hace falta. El arranque puede tardar más de 90 segundos. Run se habilita cuando el motor conecta.",
+    "alertFailed": "Esperando la reconexión GPU. El agente intenta iniciar AMD cuando hace falta. El arranque puede tardar más de 90 segundos. Run se habilita cuando el motor conecta.",
+    "alertOffline": "Esperando la reconexión GPU. El agente intenta iniciar AMD cuando hace falta. El arranque puede tardar más de 90 segundos. Run se habilita cuando el motor conecta.",
     "stillConnecting": "Seguimos conectando…",
-    "connectionCountdown": "Cuenta atrás de 40 segundos. El arranque GPU puede tardar más."
+    "connectionCountdown": "Cuenta atrás de 90 segundos. El arranque GPU puede tardar más."
   },
   "fr": {
     "technicalData": "Données techniques",
@@ -574,12 +574,12 @@ window.AMDQUANT_I18N = {
     "validation_invalid_variant": "Cette variante ne correspond pas à cette catégorie.",
     "validation_generated_fields": "Les variantes générées acceptent kind, variant, size et seed uniquement. Utilisez le modèle normal pour vos données.",
     "validation_channel_limit": "Les réseaux radio générés acceptent 2048 émetteurs maximum.",
-    "alertChecking": "En attente de la reconnexion du GPU. L’agent tente de démarrer AMD si nécessaire. Le démarrage peut dépasser 40 secondes. Run devient disponible lorsque le moteur est connecté.",
-    "alertAccepted": "En attente de la reconnexion du GPU. L’agent tente de démarrer AMD si nécessaire. Le démarrage peut dépasser 40 secondes. Run devient disponible lorsque le moteur est connecté.",
-    "alertFailed": "En attente de la reconnexion du GPU. L’agent tente de démarrer AMD si nécessaire. Le démarrage peut dépasser 40 secondes. Run devient disponible lorsque le moteur est connecté.",
-    "alertOffline": "En attente de la reconnexion du GPU. L’agent tente de démarrer AMD si nécessaire. Le démarrage peut dépasser 40 secondes. Run devient disponible lorsque le moteur est connecté.",
+    "alertChecking": "En attente de la reconnexion du GPU. L’agent tente de démarrer AMD si nécessaire. Le démarrage peut dépasser 90 secondes. Run devient disponible lorsque le moteur est connecté.",
+    "alertAccepted": "En attente de la reconnexion du GPU. L’agent tente de démarrer AMD si nécessaire. Le démarrage peut dépasser 90 secondes. Run devient disponible lorsque le moteur est connecté.",
+    "alertFailed": "En attente de la reconnexion du GPU. L’agent tente de démarrer AMD si nécessaire. Le démarrage peut dépasser 90 secondes. Run devient disponible lorsque le moteur est connecté.",
+    "alertOffline": "En attente de la reconnexion du GPU. L’agent tente de démarrer AMD si nécessaire. Le démarrage peut dépasser 90 secondes. Run devient disponible lorsque le moteur est connecté.",
     "stillConnecting": "Connexion en cours…",
-    "connectionCountdown": "Compte à rebours de 40 secondes. Le démarrage du GPU peut prendre plus de temps."
+    "connectionCountdown": "Compte à rebours de 90 secondes. Le démarrage du GPU peut prendre plus de temps."
   },
   "de": {
     "technicalData": "Technische Daten",
@@ -768,12 +768,12 @@ window.AMDQUANT_I18N = {
     "validation_invalid_variant": "Diese Variante gehört nicht zu dieser Kategorie.",
     "validation_generated_fields": "Generierte Varianten akzeptieren nur kind, variant, size und seed. Für eigene Daten die Standardvorlage verwenden.",
     "validation_channel_limit": "Generierte Funknetze unterstützen höchstens 2048 Sender.",
-    "alertChecking": "Warten auf die GPU-Verbindung. Der Agent versucht bei Bedarf, AMD zu starten. Der Start kann länger als 40 Sekunden dauern. Run wird freigeschaltet, sobald die Engine verbunden ist.",
-    "alertAccepted": "Warten auf die GPU-Verbindung. Der Agent versucht bei Bedarf, AMD zu starten. Der Start kann länger als 40 Sekunden dauern. Run wird freigeschaltet, sobald die Engine verbunden ist.",
-    "alertFailed": "Warten auf die GPU-Verbindung. Der Agent versucht bei Bedarf, AMD zu starten. Der Start kann länger als 40 Sekunden dauern. Run wird freigeschaltet, sobald die Engine verbunden ist.",
-    "alertOffline": "Warten auf die GPU-Verbindung. Der Agent versucht bei Bedarf, AMD zu starten. Der Start kann länger als 40 Sekunden dauern. Run wird freigeschaltet, sobald die Engine verbunden ist.",
+    "alertChecking": "Warten auf die GPU-Verbindung. Der Agent versucht bei Bedarf, AMD zu starten. Der Start kann länger als 90 Sekunden dauern. Run wird freigeschaltet, sobald die Engine verbunden ist.",
+    "alertAccepted": "Warten auf die GPU-Verbindung. Der Agent versucht bei Bedarf, AMD zu starten. Der Start kann länger als 90 Sekunden dauern. Run wird freigeschaltet, sobald die Engine verbunden ist.",
+    "alertFailed": "Warten auf die GPU-Verbindung. Der Agent versucht bei Bedarf, AMD zu starten. Der Start kann länger als 90 Sekunden dauern. Run wird freigeschaltet, sobald die Engine verbunden ist.",
+    "alertOffline": "Warten auf die GPU-Verbindung. Der Agent versucht bei Bedarf, AMD zu starten. Der Start kann länger als 90 Sekunden dauern. Run wird freigeschaltet, sobald die Engine verbunden ist.",
     "stillConnecting": "Verbindung läuft…",
-    "connectionCountdown": "40-Sekunden-Countdown. Der GPU-Start kann länger dauern."
+    "connectionCountdown": "90-Sekunden-Countdown. Der GPU-Start kann länger dauern."
   }
 };
 

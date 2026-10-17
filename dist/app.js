@@ -22,7 +22,7 @@
     $('runStatus').classList.toggle('connecting',connecting);
     $('runStatus').setAttribute('aria-busy',String(connecting));
     if(connecting){
-      if(connectionDeadline===null)connectionDeadline=performance.now()+40000;
+      if(connectionDeadline===null)connectionDeadline=performance.now()+90000;
       if(!$('runStatus').querySelector('.connection-spinner'))$('runStatus').innerHTML='<span class="connection-spinner" aria-hidden="true"></span><span class="connection-label">Connecting…</span><strong class="connection-countdown" role="timer" aria-live="off"></strong>';
       updateConnectionCountdown();
       if(connectionTimer===null&&performance.now()<connectionDeadline)connectionTimer=setInterval(updateConnectionCountdown,1000);
@@ -37,7 +37,7 @@
     const clock=$('runStatus').querySelector('.connection-countdown');
     if(!clock)return;
     const remaining=Math.max(0,Math.ceil((connectionDeadline-performance.now())/1000));
-    const display=`00:${String(remaining).padStart(2,'0')}`;
+    const display=`${String(Math.floor(remaining/60)).padStart(2,'0')}:${String(remaining%60).padStart(2,'0')}`;
     if(clock.textContent!==display)clock.textContent=display;
     clock.setAttribute('aria-label',t('connectionCountdown'));
     const label=$('runStatus').querySelector('.connection-label');
