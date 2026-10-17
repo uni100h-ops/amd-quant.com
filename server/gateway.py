@@ -229,14 +229,16 @@ def health():
 
 @app.get('/api/public/info')
 def info(request: Request):
-    return {**request.app.state.broker.info(), 'visit_alert': request.app.state.visit_alerts.status()}
+    alerts = request.app.state.visit_alerts
+    return {**request.app.state.broker.info(), 'visit_alert': alerts.status(),
+            'waiting_for_gpu': alerts.waiting()}
 
 @app.post('/api/public/visit')
 async def visit(request: Request):
     authorize_public(request)
     alerts = request.app.state.visit_alerts
-    # A visit signal from this page, not a health/info request or an arbitrary
-    # email form. The destination and message are exclusively server-configured.
+    # Only this page's explicit heartbeat records demand. Monitoring /info
+    # never creates demand. No email or visitor identity is involved.
     if request.headers.get('x-amdquant-visit') != '1' or request.headers.get('sec-fetch-site') == 'cross-site':
         raise HTTPException(403, 'invalid_visit')
     origin = request.headers.get('origin')
@@ -298,3 +300,4 @@ async def disconnect(request: Request):
     return {'status': 'disconnected'}
 
 app.mount('/', StaticFiles(directory=ROOT / 'dist', html=True), name='web')
+
