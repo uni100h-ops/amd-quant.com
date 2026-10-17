@@ -7,7 +7,8 @@
   let language = store.get('amdquant-language') || 'en';
   if (!dictionary[language]) language = 'en';
   let info=null, selected=null, result=null, active=null, pollTimer=null, stage='checking', category='channels', ownMode=false, validating=false;
-  let visitPending=false;
+  let visitPending=false, infoPending=false;
+  let connectionDeadline=null, connectionTimer=null;
   const drafts={};
   const key='amdquant-qubo-active-v10';
   const t = k => dictionary[language][k] || dictionary.en[k] || k;
@@ -21,10 +22,28 @@
     $('runStatus').classList.toggle('connecting',connecting);
     $('runStatus').setAttribute('aria-busy',String(connecting));
     if(connecting){
-      if(!$('runStatus').querySelector('.connection-spinner'))$('runStatus').innerHTML='<span class="connection-spinner" aria-hidden="true"></span><span>Connecting…</span>';
+      if(connectionDeadline===null)connectionDeadline=performance.now()+40000;
+      if(!$('runStatus').querySelector('.connection-spinner'))$('runStatus').innerHTML='<span class="connection-spinner" aria-hidden="true"></span><span class="connection-label">Connecting…</span><strong class="connection-countdown" role="timer" aria-live="off"></strong>';
+      updateConnectionCountdown();
+      if(connectionTimer===null&&performance.now()<connectionDeadline)connectionTimer=setInterval(updateConnectionCountdown,1000);
     }else{
+      if(connectionTimer!==null)clearInterval(connectionTimer);
+      connectionTimer=null;connectionDeadline=null;
       $('runStatus').textContent=dictionary.en[stage]?t(stage):errorText(stage);
     }
+  }
+  function updateConnectionCountdown() {
+    if(connectionDeadline===null||info?.ready)return;
+    const clock=$('runStatus').querySelector('.connection-countdown');
+    if(!clock)return;
+    const remaining=Math.max(0,Math.ceil((connectionDeadline-performance.now())/1000));
+    const display=`00:${String(remaining).padStart(2,'0')}`;
+    if(clock.textContent!==display)clock.textContent=display;
+    clock.setAttribute('aria-label',t('connectionCountdown'));
+    const label=$('runStatus').querySelector('.connection-label');
+    const text=remaining>0?'Connecting…':t('stillConnecting');
+    if(label.textContent!==text)label.textContent=text;
+    if(remaining===0&&connectionTimer!==null){clearInterval(connectionTimer);connectionTimer=null;}
   }
   function busy(value) {
     $('executeButton').disabled=value || !info?.ready || !info?.public;
@@ -263,6 +282,8 @@
     const a=document.createElement('a');a.href=url;a.download=`amdquant-${name}-${result.problem.spec.kind}-solution.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);
   }));
   async function refreshInfo() {
+    if(infoPending)return;
+    infoPending=true;
     try {
       const data=await api('/api/public/info');
       const wasReady=info?.ready;
@@ -277,6 +298,8 @@
     } catch {
       info={ready:false,public:true,hardware:{},presets:info?.presets||[],categories:info?.categories||[]};
       renderHardware();busy(!!active);if(!active)status('offline');
+    } finally {
+      infoPending=false;
     }
   }
   translate();busy(true);
@@ -284,5 +307,6 @@
     try{const saved=JSON.parse(store.get(key));if(saved&&/^[a-f0-9]{32}$/.test(saved.id)){active=saved;category=saved.category||'channels';ownMode=!!saved.ownMode;selected=saved.selected||null;$('question').value=saved.question;samples();pending(saved.title||'');busy(true);poll();}}
     catch{store.remove(key);}
   });
-  setInterval(()=>{if(!active)refreshInfo();},15000);
+  setInterval(()=>{if(!active)refreshInfo();},5000);
 })();
+
