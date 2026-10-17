@@ -9,7 +9,12 @@ https://youtu.be/ZbqKnIasKBw
 ## What it does
 AmdQuant demonstrates faster optimization and better solution quality using quantum-inspired computing on AMD GPUs versus a traditional CPU solver in recorded benchmarks, with side-by-side results and downloadable evidence.
 
-AmdQuant turns structured optimization problems into concrete decisions: which radio channel a transmitter should use, which team receives a task, which projects to select, or where to place a computing job. Users can choose from **18 reproducible examples across five categories**, enter supported data through guided JSON templates, or define a custom quadratic binary objective.
+AmdQuant turns structured optimization problems into concrete decisions: Examples:
+which radio channel a transmitter should use
+which team receives a task
+which projects to select
+where to place a computing job. 
+Users can choose from **18 reproducible examples across five categories**, enter supported data through guided JSON templates, or define a custom quadratic binary objective.
 
 Each problem is evaluated by two real numerical engines:
 
