@@ -186,10 +186,10 @@ window.AMDQUANT_I18N = {
     "validation_invalid_variant": "This variant is not supported in this category.",
     "validation_generated_fields": "Generated variants accept kind, variant, size and seed only. Use the standard template for your own data.",
     "validation_channel_limit": "Generated radio networks support at most 2048 transmitters.",
-    "alertChecking": "Waiting for the administrator to activate the GPU. An email alert will be requested every 30 seconds while you wait.",
-    "alertAccepted": "Waiting for the administrator to activate the GPU. The mail service accepted an alert; reminders repeat every 30 seconds while you wait.",
-    "alertFailed": "Waiting for the administrator to activate the GPU. The email service rejected or could not receive the alert; retries continue every 30 seconds.",
-    "alertOffline": "Waiting for manual GPU activation. This experimental service has no guaranteed waiting time."
+    "alertChecking": "Waiting for GPU reconnection. The recovery agent detects visits and attempts to start the AMD environment. Run becomes available when the engine connects. This experimental service has no guaranteed waiting time.",
+    "alertAccepted": "Waiting for GPU reconnection. The recovery agent detects visits and attempts to start the AMD environment. Run becomes available when the engine connects. This experimental service has no guaranteed waiting time.",
+    "alertFailed": "Waiting for GPU reconnection. The recovery agent detects visits and attempts to start the AMD environment. Run becomes available when the engine connects. This experimental service has no guaranteed waiting time.",
+    "alertOffline": "Waiting for GPU reconnection. The recovery agent detects visits and attempts to start the AMD environment. Run becomes available when the engine connects. This experimental service has no guaranteed waiting time."
   },
   "es": {
     "technicalData": "Datos técnicos",
@@ -378,10 +378,10 @@ window.AMDQUANT_I18N = {
     "validation_invalid_variant": "Esta variante no corresponde a esta pestaña.",
     "validation_generated_fields": "Las variantes generadas solo admiten kind, variant, size y seed. Para datos propios, utiliza la plantilla normal.",
     "validation_channel_limit": "Las redes de radio generadas admiten hasta 2048 transmisores.",
-    "alertChecking": "Esperando a que el administrador active la GPU. Se solicitará un aviso por correo cada 30 segundos mientras esperas.",
-    "alertAccepted": "Esperando a que el administrador active la GPU. El servicio de correo aceptó el aviso; se repetirá cada 30 segundos mientras esperas.",
-    "alertFailed": "Esperando a que el administrador active la GPU. No se pudo enviar el aviso; se reintentará cada 30 segundos.",
-    "alertOffline": "Esperando la activación manual de la GPU. Esta web experimental no tiene un tiempo de espera garantizado."
+    "alertChecking": "Esperando la reconexión GPU. El agente detecta las visitas e intenta iniciar el entorno AMD. Run se habilita cuando el motor conecta. Esta web experimental no garantiza un tiempo de espera.",
+    "alertAccepted": "Esperando la reconexión GPU. El agente detecta las visitas e intenta iniciar el entorno AMD. Run se habilita cuando el motor conecta. Esta web experimental no garantiza un tiempo de espera.",
+    "alertFailed": "Esperando la reconexión GPU. El agente detecta las visitas e intenta iniciar el entorno AMD. Run se habilita cuando el motor conecta. Esta web experimental no garantiza un tiempo de espera.",
+    "alertOffline": "Esperando la reconexión GPU. El agente detecta las visitas e intenta iniciar el entorno AMD. Run se habilita cuando el motor conecta. Esta web experimental no garantiza un tiempo de espera."
   },
   "fr": {
     "technicalData": "Données techniques",
@@ -570,10 +570,10 @@ window.AMDQUANT_I18N = {
     "validation_invalid_variant": "Cette variante ne correspond pas à cette catégorie.",
     "validation_generated_fields": "Les variantes générées acceptent kind, variant, size et seed uniquement. Utilisez le modèle normal pour vos données.",
     "validation_channel_limit": "Les réseaux radio générés acceptent 2048 émetteurs maximum.",
-    "alertChecking": "En attente de l’activation du GPU par l’administrateur. Une alerte par e-mail sera demandée toutes les 30 secondes pendant l’attente.",
-    "alertAccepted": "En attente de l’activation du GPU par l’administrateur. Le service de messagerie a accepté l’alerte ; les rappels se répètent toutes les 30 secondes.",
-    "alertFailed": "En attente de l’activation du GPU par l’administrateur. L’envoi de l’alerte a échoué ; nouvel essai toutes les 30 secondes.",
-    "alertOffline": "En attente de l’activation manuelle du GPU. Ce service expérimental ne garantit aucun délai."
+    "alertChecking": "En attente de la reconnexion du GPU. L’agent détecte les visites et tente de démarrer l’environnement AMD. Run devient disponible lorsque le moteur est connecté. Ce service expérimental ne garantit aucun délai.",
+    "alertAccepted": "En attente de la reconnexion du GPU. L’agent détecte les visites et tente de démarrer l’environnement AMD. Run devient disponible lorsque le moteur est connecté. Ce service expérimental ne garantit aucun délai.",
+    "alertFailed": "En attente de la reconnexion du GPU. L’agent détecte les visites et tente de démarrer l’environnement AMD. Run devient disponible lorsque le moteur est connecté. Ce service expérimental ne garantit aucun délai.",
+    "alertOffline": "En attente de la reconnexion du GPU. L’agent détecte les visites et tente de démarrer l’environnement AMD. Run devient disponible lorsque le moteur est connecté. Ce service expérimental ne garantit aucun délai."
   },
   "de": {
     "technicalData": "Technische Daten",
@@ -762,9 +762,10 @@ window.AMDQUANT_I18N = {
     "validation_invalid_variant": "Diese Variante gehört nicht zu dieser Kategorie.",
     "validation_generated_fields": "Generierte Varianten akzeptieren nur kind, variant, size und seed. Für eigene Daten die Standardvorlage verwenden.",
     "validation_channel_limit": "Generierte Funknetze unterstützen höchstens 2048 Sender.",
-    "alertChecking": "Warten auf die GPU-Aktivierung durch den Administrator. Während der Wartezeit wird alle 30 Sekunden eine E-Mail angefordert.",
-    "alertAccepted": "Warten auf die GPU-Aktivierung durch den Administrator. Der E-Mail-Dienst hat die Nachricht angenommen; Erinnerungen folgen alle 30 Sekunden.",
-    "alertFailed": "Warten auf die GPU-Aktivierung durch den Administrator. Die E-Mail konnte nicht gesendet werden; erneuter Versuch alle 30 Sekunden.",
-    "alertOffline": "Warten auf die manuelle GPU-Aktivierung. Dieser experimentelle Dienst garantiert keine Wartezeit."
+    "alertChecking": "Warten auf die GPU-Verbindung. Der Agent erkennt Besuche und versucht, die AMD-Umgebung zu starten. Run wird freigeschaltet, sobald die Engine verbunden ist. Dieser experimentelle Dienst garantiert keine Wartezeit.",
+    "alertAccepted": "Warten auf die GPU-Verbindung. Der Agent erkennt Besuche und versucht, die AMD-Umgebung zu starten. Run wird freigeschaltet, sobald die Engine verbunden ist. Dieser experimentelle Dienst garantiert keine Wartezeit.",
+    "alertFailed": "Warten auf die GPU-Verbindung. Der Agent erkennt Besuche und versucht, die AMD-Umgebung zu starten. Run wird freigeschaltet, sobald die Engine verbunden ist. Dieser experimentelle Dienst garantiert keine Wartezeit.",
+    "alertOffline": "Warten auf die GPU-Verbindung. Der Agent erkennt Besuche und versucht, die AMD-Umgebung zu starten. Run wird freigeschaltet, sobald die Engine verbunden ist. Dieser experimentelle Dienst garantiert keine Wartezeit."
   }
 };
+
