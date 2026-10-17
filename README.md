@@ -4,8 +4,6 @@
 
 [Open the web demo](https://amd-quant.com/) · Prepared for [AMD Developer Hackathon: ACT III](https://lablab.ai/ai-hackathons/amd-developer-hackathon-act-iii/)
 
-Application version: **10.0.0**. Documentation and radio catalogue updated: **17 October 2026**. The v10 worker protocol is unchanged.
-
 ## What it does
 
 AmdQuant turns structured optimization problems into concrete decisions: which radio channel a transmitter should use, which team receives a task, which projects to select, or where to place a computing job. Users can choose from **18 reproducible examples across five categories**, enter supported data through guided JSON templates, or define a custom quadratic binary objective.
