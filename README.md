@@ -1,5 +1,7 @@
 # AmdQuant — Complex Problem Resolution
 
+**Author:** Antonio (GitHub: uni100h-ops) · **License:** [MIT](LICENSE)
+
 **An interactive optimization workbench powered by AMD GPUs. Define a problem, run two optimization engines, and compare both execution time and solution quality.**
 
 [Open the web demo](https://amd-quant.com/) · Prepared for [AMD Developer Hackathon: ACT III](https://lablab.ai/ai-hackathons/amd-developer-hackathon-act-iii/)
@@ -157,131 +159,13 @@ Render hosts the interface and transient queue; it does not execute Simulated Bi
 
 The worker verifies ROCm, GPU availability and actual GPU operations before advertising readiness. There is no CPU fallback for the GPU engine. PyTorch's `cuda:0` device name is also used by its ROCm backend and does not imply NVIDIA hardware.
 
-## Run the application
+## Demo availability
 
-### Render gateway
-
-Use Python 3.12 and the project source files. The supplied `render.yaml` contains the service configuration.
-
-Build command:
-
-```bash
-pip install -r requirements.txt
-```
-
-Start command:
-
-```bash
-uvicorn server.main:app --host 0.0.0.0 --port $PORT --workers 1
-```
-
-| Variable | Purpose |
-| --- | --- |
-| `GPU_WORKER_TOKEN` | Shared secret of at least 32 characters. The gateway and notebook worker must use the same value. |
-| `PUBLIC_DEMO` | Set to `1` for the public browser demonstration. |
-| `APP_TOKEN` | Bearer token for protected public API operations when `PUBLIC_DEMO` is `0`; the current browser interface has no login flow. |
-| `PYTHON_VERSION` | The supplied Render configuration selects `3.12.14`. |
-
-The Blueprint generates the two secrets on initial deployment. Keep them out of source control. Reuse the existing worker token when restarting a notebook. Run one gateway instance with one Uvicorn worker because the queue is held in memory.
-
-`/healthz` checks the web service. `/api/public/info` reports worker readiness and hardware; a healthy web service alone does not mean the GPU worker is connected.
-
-### AMD notebook — packaged setup
-
-Use an AMD GPU notebook with a compatible ROCm-enabled PyTorch installation.
-
-1. Upload the matching **`AmdQuant_GPU_AMD_v10.zip`**, still compressed, and **`INICIAR_AMDQUANT_V10.ipynb`** into the same Jupyter folder. These are separate release artifacts; the minimal application ZIP does not include the notebook.
-2. Open the notebook and run all cells. It checks the GPU, verifies the release ZIP and prepares the worker environment while preserving the existing ROCm PyTorch build.
-3. Enter the gateway's HTTPS root URL and its existing `GPU_WORKER_TOKEN` when prompted.
-4. Keep the final worker cell running. Refresh the website and check GPU readiness.
-
-The notebook verifies the exact release ZIP checksum. Adding this README or presentation files to that ZIP would change it: publish documentation alongside the unchanged release archive. The current web-only catalogue and UI update also keeps compatibility with that original worker.
-
-### AMD notebook — source setup
-
-For a checkout rather than the packaged release, run the following from the source root inside an AMD notebook whose `python3` already has working ROCm PyTorch:
-
-```bash
-python3 -m venv --system-site-packages .venv
-source .venv/bin/activate
-python -c 'import torch; assert torch.version.hip and torch.cuda.is_available(); print(torch.cuda.get_device_name(0))'
-python -c 'from importlib.metadata import version; print("torch==" + version("torch"))' > torch-constraint.txt
-python -m pip install -c torch-constraint.txt -r requirements-gpu.txt
-read -r -p 'Gateway HTTPS URL: ' RENDER_URL
-export RENDER_URL
-read -r -s -p 'Existing GPU_WORKER_TOKEN: ' GPU_WORKER_TOKEN
-export GPU_WORKER_TOKEN
-python -m server.runner
-```
-
-`requirements-gpu.txt` installs the optimization dependencies; it does not provision the AMD driver or the ROCm PyTorch build. An environment without working AMD GPU support fails the startup check.
-
-### Reconnect after an expired session
-
-If the existing notebook session is still available, rerun its worker cell using the same URL and token. If the provider has discarded the session, request a new AMD GPU notebook and repeat the packaged setup. The web deployment can remain in place.
-
-The demo requires a running notebook worker. Jobs are transient, recent jobs are bounded in memory, and a gateway restart clears them. Download results that need to be retained.
-
-### Connecting indicator and owner email alerts
-
-When the GPU is unavailable, the browser displays **Connecting…** with a spinning
-indicator and disables Run. The accompanying text explains that an administrator
-must activate the GPU. The indicator has no percentage and does not claim that
-a GPU is being provisioned automatically.
-
-The page reports that a visitor is waiting. After an initial 20-second grace
-period, the server requests an owner email if the GPU is still offline, then
-repeats the request every **30 seconds** while visitors keep waiting. All visitors
-share one timer. Alerts stop when the worker reconnects; they also stop after
-60 seconds without a browser waiting signal. An email already in transit may
-still arrive after reconnection. The browser refreshes readiness every 15 seconds.
-
-Use Resend's HTTPS API. No SMTP setup is required:
-
-| Variable | Value or purpose |
-| --- | --- |
-| `RESEND_API_KEY` | Your private Resend API key; store it in Render Environment. |
-| `GPU_ALERT_TO` | The inbox receiving the alerts. With the default test sender, use the email associated with your Resend account. |
-| `GPU_ALERT_FROM` | `AmdQuant <onboarding@resend.dev>`; this is also the default if the variable is absent. |
-| `GPU_ALERT_SITE_URL` | Public HTTPS application URL; defaults to `https://amdquant.onrender.com`. |
-
-**Do not put your Gmail address in `GPU_ALERT_FROM`.** That is the sender, not
-the recipient. A custom sender requires a domain verified in Resend. A Gmail
-recipient belongs in `GPU_ALERT_TO`. Registering with a Gmail account does not
-authorize Resend to send as that Gmail address. See the [Resend sender-domain
-requirements](https://resend.com/docs/api-reference/errors) and [test-domain
-restriction](https://resend.com/docs/knowledge-base/403-error-resend-dev-domain).
-
-At the time of this update, [Resend Free](https://resend.com/pricing) includes
-100 emails per day and 3,000 per month. Sending every 30 seconds would use 100
-emails in approximately 50 minutes of accumulated waiting. Quota exhaustion or
-provider rejection prevents further delivery; acceptance by the API does not
-prove inbox delivery. The application does not upgrade the plan or purchase
-credits. Rendering the waiting indicator continues even if email delivery fails.
-
-This is a manually reactivated experimental GPU service, not an unattended
-24/7 endpoint. It does not use an AMD session cookie to promise automatic
-provisioning. [Render Free](https://render.com/docs/free) may also take time to
-wake up before the application can respond.
-
-### Apply this update yourself
-
-Replace the files in your existing web project with this package, preserving
-your Render environment variables and `GPU_WORKER_TOKEN`, then deploy your
-revision when you choose. The package does not perform an upload or deployment.
-
-Keep the **original notebook v10 and its original GPU ZIP** in Jupyter. The
-updated gateway forwards a validated JSON problem specification to the worker;
-it does not require the notebook's old catalogue to recognize the new button
-labels. The problem text displayed to the user is preserved in the gateway's
-job record. This keeps the renamed examples compatible with the original v10
-worker without rebuilding the GPU environment.
-
-The files changed for the example swap are `optimizer/catalog.py`, `dist/app.js`,
-`dist/index.html` and `server/gateway.py`. The README and demo narration are
-updated alongside them. The existing Connecting indicator and 30-second email
-behavior are retained.
-
+The hosted demonstration requires an active AMD notebook worker. If the page
+shows **Connecting…**, the GPU worker must be manually reactivated by the owner;
+**Run** becomes available when the worker is ready. This experimental service
+does not provide guaranteed continuous GPU availability. The demo video shows
+a completed execution.
 
 ## Main source areas
 
@@ -305,4 +189,15 @@ behavior are retained.
 - [PyTorch](https://pytorch.org/) and [AMD ROCm](https://rocm.docs.amd.com/)
 - FastAPI, NumPy and Pydantic
 
-The application source is distributed under the MIT license in `LICENSE`. Dependencies retain their respective licenses and attribution requirements.
+Copyright (c) 2026 **Antonio (GitHub: uni100h-ops)** for his original
+AmdQuant application work. The original contributors' notice is retained in
+[LICENSE](LICENSE).
+
+The application source and its accompanying documentation are released under
+the **MIT License**. MIT permits use, copying, modification, distribution and
+commercial use, subject to preserving the copyright and license notices.
+It does not transfer copyright ownership.
+
+Third-party dependencies retain their own licenses, copyrights and attribution
+requirements. The application's copyright notice does not claim ownership of
+those components or of the underlying optimization algorithms.
