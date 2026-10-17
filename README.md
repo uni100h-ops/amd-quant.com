@@ -28,6 +28,7 @@ The labels are product names. This version is a specialized optimization applica
 The contribution is the integrated application: problem models, guided inputs, validation, AMD execution, independently delivered results, and downloadable evidence. The underlying optimization algorithms are credited below.
 
 ## Explore the demo
+https://amd-quant.com/
 
 1. Open the application. **Radio channels · Problem 1** is selected initially. If the GPU is offline, **Connecting…** and a spinning indicator remain visible; **Run** becomes available when the worker connects.
 2. Select a category and a **Problem** button. Its description appears in the input area.
