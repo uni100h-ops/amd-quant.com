@@ -3,8 +3,8 @@
 **An interactive optimization workbench powered by AMD GPUs. Define a problem, run two optimization engines, and compare both execution time and solution quality.**
 
 [Open the web demo](https://amd-quant.com/) · Prepared for [AMD Developer Hackathon: ACT III](https://lablab.ai/ai-hackathons/amd-developer-hackathon-act-iii/)
-https://youtu.be/ZbqKnIasKBw
 
+https://youtu.be/ZbqKnIasKBw
 
 ## What it does
 AmdQuant demonstrates faster optimization and better solution quality using quantum-inspired computing on AMD GPUs versus a traditional CPU solver in recorded benchmarks, with side-by-side results and downloadable evidence.
