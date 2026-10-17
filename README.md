@@ -2,7 +2,7 @@
 
 **An interactive optimization workbench powered by AMD GPUs. Define a problem, run two optimization engines, and compare both execution time and solution quality.**
 
-[Open the web demo](https://amdquant.onrender.com/) · Prepared for [AMD Developer Hackathon: ACT III](https://lablab.ai/ai-hackathons/amd-developer-hackathon-act-iii/)
+[Open the web demo](https://amd-quant.com/) · Prepared for [AMD Developer Hackathon: ACT III](https://lablab.ai/ai-hackathons/amd-developer-hackathon-act-iii/)
 
 Application version: **10.0.0**. Documentation and radio catalogue updated: **17 October 2026**. The v10 worker protocol is unchanged.
 
