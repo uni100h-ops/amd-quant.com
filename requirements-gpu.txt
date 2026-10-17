@@ -1,0 +1,7 @@
+# Notebook installer pins the existing ROCm torch build with a constraint.
+httpx==0.28.1
+pydantic==2.14.1
+numpy==2.5.4
+dimod==0.12.22
+dwave-samplers==1.8.0
+simulated-bifurcation==2.0.0

@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: amdquant
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.14
+      - key: PUBLIC_DEMO
+        value: "1"
+      - key: GPU_WORKER_TOKEN
+        generateValue: true
+      - key: APP_TOKEN
+        generateValue: true
+# Use exactly one instance and one uvicorn worker: jobs are transient in memory.
+# The supplied notebook connects OUT to this service over HTTPS.
+
+# Optional visitor email: set RESEND_API_KEY and GPU_ALERT_TO in Render Environment.
+# See LEEME_AVISO_EMAIL.md. Never store a real key in this file.
