@@ -175,7 +175,7 @@
       $('evidenceContent').textContent=t('waitingVerification');return;
     }
     const ratio=r.comparison.sb_speed_ratio;
-    const faster=ratio>=1?'AI ADM Quantum micro':'Traditional AI micro';
+    const faster=ratio>=1?'AI AMD Quantum micro':'Traditional AI micro';
     const multiple=ratio>=1?ratio:1/ratio;
     const note=!r.comparison.both_feasible?'invalidQuality':r.comparison.same_objective?'equalQuality':'differentQuality';
     const difference=r.comparison.sb_objective_difference_percent;
@@ -309,4 +309,5 @@
   });
   setInterval(()=>{if(!active)refreshInfo();},5000);
 })();
+
 
